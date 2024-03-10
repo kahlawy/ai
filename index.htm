@@ -5,24 +5,35 @@
 <body>
 <h1>Image Classification</h1>
 <h2>With MobileNet and ml5.js</h2>
+<input type="text" id="imagePath" placeholder="Enter image URL">
+<button onclick="classifyImage()">Classify</button>
 <div id="result">Scanning ...</div>
-<img id="image" crossorigin="anonymous" src="pic1.jpg" width="100%">
+<img crossOrigin='anonymous' id="image" src="pic1.jpg" width="100%">
 
 <script>
-// Initialize Image Classifier with MobileNet.
-const classifier =  ml5.imageClassifier('MobileNet');
-classifier.classify(document.getElementById("image"), gotResult);
-
-// Function to run when results arrive
-function gotResult(error, results) {
-  const element = document.getElementById("result");
-  if (error) {
-    element.innerHTML = error;
-  } else {
-    let num = results[0].confidence * 100;
-    element.innerHTML = results[0].label + "<br>Confidence: " + num.toFixed(2) + "%";
+  let classifier;
+  
+  function preload() {
+    classifier = ml5.imageClassifier('MobileNet');
   }
-}
+
+  function classifyImage() {
+    const imagePath = document.getElementById('imagePath').value;
+    const imgElement = document.getElementById('image');
+    imgElement.src = imagePath;
+
+    classifier.classify(imgElement, gotResult);
+  }
+
+  function gotResult(error, results) {
+    const element = document.getElementById('result');
+    if (error) {
+      element.innerHTML = error;
+    } else {
+      let num = results[0].confidence * 100;
+      element.innerHTML = results[0].label + "<br>Confidence: " + num.toFixed(2) + "%";
+    }
+  }
 </script>
 </body>
 </html>
